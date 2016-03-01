@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Vefapp</title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+        <script src="http://89.160.157.173/Verkefni_1/Vefapp/node_modules/whatwg-fetch/fetch.js"></script>
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="calculator.css">
+        
+        <script type="text/javascript">
+         $("document").ready(function() {
+          var URL = "data/arion.json";
+          function fetchApi() {
+            fetch(URL).then(function(response) {
+              return response.json();
+            }).then(function(json) {
+              var template = $("#itemTemplate").html();
+              var renderer = Handlebars.compile(template);
+              var result = renderer(json);
+              $("#content").html(result);
+            }).catch(function(ex) {
+              console.log('parsing failed', ex)
+            });
+          }
+          fetchApi();
+
+          // Það er ekkert if x == y í Handlebars, þetta skráir hjálpara fyrir það þannig ég get ert {{#if_eq shortName 'ISK'}} til að birta ekki ISK. Sjá neðst undir <script id="itemTemplate" type="text/x-handlebars-template">....<//script>
+         Handlebars.registerHelper('if_eq', function(a, b, opts) {
+            if (a == b) {
+                return opts.fn(this);
+            } else {
+                return opts.inverse(this);
+            }
+        });
+         });
+        </script>
+    </head>
+    <body>
+        <div class="wrapper">
+        <div class="navbar">
+            <div class="container">
+                <div id="back"></div>
+                <div id="title" class="center-block"><h1>Gengi</h1></div>
+            </div>
+        </div>
+        <div id="content" class="container">
+              <div class="itemTemplateWrapper"></div>
+              <div class="itemTemplateWrapper"></div>
+          <div id="calculator">
+            <!-- Screen and clear key -->
+            <div class="top">
+            </div>
+            
+            <div class="keys">
+              <!-- operators and other keys -->
+              <span>1</span>
+              <span>2</span>
+              <span>3</span>
+              <span>4</span>
+              <span>5</span>
+              <span>6</span>
+              <span>7</span>
+              <span>8</span>
+              <span>9</span>
+              <span>,</span>
+              <span>0</span>
+            </div>
+          </div>
+        </div>
+        </div>
+    </body>
+</html>

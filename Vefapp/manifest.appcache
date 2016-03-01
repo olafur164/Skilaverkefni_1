@@ -1,0 +1,16 @@
+CACHE MANIFEST
+
+CACHE:
+index.html
+style.css
+bootstrap.css
+fetch.js
+handlebars.js
+jquery.js
+http://apis.is/currency/arion
+
+NETWORK:
+*
+
+FALLBACK:
+/ /Verkefni_1/Vefapp/index.html

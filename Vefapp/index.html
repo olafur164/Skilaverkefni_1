@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html manifest="manifest.appcache">
+    <head>
+        <title>Vefapp</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="bootstrap.css">
+        <link rel="stylesheet" href="style.css">
+        <script>
+        // Check if a new cache is available on page load.
+        window.addEventListener('load', function(e) {
+
+          window.applicationCache.addEventListener('updateready', function(e) {
+            if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+                window.location.reload();
+            } else {
+              // Manifest didn't changed. Nothing new to server.
+            }
+          }, false);
+
+        }, false);
+        </script>
+    </head>
+    <body>
+        <div class="wrapper">
+           <div class="navbar">
+               <div class="container">
+                   <div id="back"></div>
+                   <div id="title" class="center-block"><h1>Gengi</h1></div>
+               </div>
+           </div>
+           <div id="content" class="container"></div>
+        </div>
+        <script src="jquery.js"></script>
+        <script type="text/javascript" src="handlebars.js"></script>
+        <script src="fetch.js"></script>
+        <script type="text/javascript">
+         $("document").ready(function() {
+          var URL = "http://apis.is/currency/arion";
+          function fetchApi() {
+            fetch(URL).then(function(response) {
+              return response.json();
+            }).then(function(json) {
+              var template = $("#itemTemplate").html();
+              var renderer = Handlebars.compile(template);
+              var result = renderer(json);
+              $("#content").html(result);
+            }).catch(function(ex) {
+              console.log('parsing failed', ex)
+            });
+          }
+          fetchApi();
+
+          // ÃžaÃ° er ekkert if x == y Ã­ Handlebars, Ã¾etta skrÃ¡ir hjÃ¡lpara fyrir Ã¾aÃ° Ã¾annig Ã©g get ert {{#if_eq shortName 'ISK'}} til aÃ° birta ekki ISK. SjÃ¡ neÃ°st undir <script id="itemTemplate" type="text/x-handlebars-template">....<//script>
+         Handlebars.registerHelper('if_eq', function(a, b, opts) {
+            if (a == b) {
+                return opts.fn(this);
+            } else {
+                return opts.inverse(this);
+            }
+        });
+         });
+        </script>
+        <script id="itemTemplate" type="text/x-handlebars-template">
+            <div class="currency-list">
+            {{#each results}}
+                {{#if_eq shortName 'ISK'}}
+                {{else}}
+                    <a class="itemTemplateWrapper" href="/{{shortName}}">
+                        <div class="row">
+                            <div class="">
+                                <img src="http://89.160.157.173/Verkefni_1/Vefapp/img/{{shortName}}.png" class="img-responsive pull-left" alt="Responsive image">
+                            </div>
+                            <div id="currency-info">
+                                <div class="">
+                                    <div class="pull-left">
+                                        <h1 id="shortName">{{shortName}}</h1>
+                                        <span id="longName">{{longName}}</span>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <div id="cur-value" class="pull-right">{{value}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                {{/if_eq}}
+            {{/each}}
+            </div>
+        </script>
+    </body>
+</html>
